@@ -1,3 +1,6 @@
 body{
-    background-color: ivory;
+    background-color:black
+}
+.card-container{
+    display: flex;
 }
