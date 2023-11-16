@@ -28,7 +28,7 @@
                     <a class="nav-link" href="favorite.html">Favorite</a>
                   </li>
                 </ul>
-                <form class="d-flex" role="search">
+                <form class="d-flex" role="search" method="get">
                   <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                   <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
@@ -38,13 +38,13 @@
     </div>
     <div class="card-container d-flex">
       <div class="row">
-        {% for comic in datas %}
+        {% for comic in comics %}
         <div class="card border rounded-3 shadow-lg col-sm-12" style="width: 18rem;">
-            <img src={{context.img_url}} class="card-img-top" alt={{context.title}} >
+            <img src={{comic.img_url}} class="card-img-top" alt={{comic.title}} >
             <div class="card-body">
-              <h5 class="card-title">{{context.title}}</h5>
-              <p class="card-text">{{context.new_update}}</p>
-              <a href={{context.comic_url}} class="btn btn-primary">Go Comic</a>
+              <h5 class="card-title">{{comic.title}}</h5>
+              <p class="card-text">{{comic.new_update}}</p>
+              <a href={{comic.comic_url}} class="btn btn-primary">Go Comic</a>
             </div> 
           </div>
         {% endfor %}

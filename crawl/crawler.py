@@ -72,3 +72,34 @@ def search_comic(keys):
         print(e)
     finally:
         chrome.quit()
+
+
+def quick_pick_comic(url):
+    datas = []
+    chrome = get_chrome(url, hide=True)
+    comic_xpath = '/html/body/ul[1]/li[1]/a'
+    chrome.find_element(By.XPATH, comic_xpath).click()
+    scroll_window(chrome=chrome)
+    soup = BeautifulSoup(chrome.page_source, 'lxml')
+    if soup != None:
+        content = soup.find('ul', class_="manga-list-2").findAll('li')
+    try:
+        for comic in content:
+            title = [title.text.strip() for title in comic][3]
+            new_update = [title.text.strip() for title in comic][-2]
+            comic_url = 'https://www.manhuaren.com'+comic.find('a').get('href')
+            img_url = comic.find('img').get('src')
+            datas.append([title, new_update, comic_url, img_url])
+    except Exception as e:
+        print(e)
+    finally:
+        if chrome != None:
+            chrome.close()
+    return datas
+
+
+def scroll_window(chrome, start=0, end=10000, step=500, delay_time=0.5):
+    while start <= end:
+        chrome.execute_script(f'window.scrollTo({start},{start+step})')
+        start += step
+        time.sleep(delay_time)
