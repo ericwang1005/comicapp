@@ -85,8 +85,9 @@ def quick_pick_comic(url):
         content = soup.find('ul', class_="manga-list-2").findAll('li')
     try:
         for comic in content:
-            title = [title.text.strip() for title in comic][3]
-            new_update = [title.text.strip() for title in comic][-2]
+            title = comic.find('p').text.strip()
+            new_update = comic.find(
+                'p', class_='manga-list-2-tip').text.strip()
             comic_url = 'https://www.manhuaren.com'+comic.find('a').get('href')
             img_url = comic.find('img').get('src')
             datas.append([title, new_update, comic_url, img_url])
