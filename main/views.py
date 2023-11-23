@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 import crawl.crawler as crawling
 from selenium.webdriver.common.by import By
+import time
 # Create your views here.
 url = 'https://www.manhuaren.com/search/'
 
@@ -30,3 +31,10 @@ def books(request):
 
 def favorite(request):
     return render(request, 'favorite.html')
+
+
+def scroll_window(chrome, start=0, end=10000, step=500, delay_time=0.5):
+    while start <= end:
+        chrome.execute_script(f'window.scrollTo({start},{start+step})')
+        start += step
+        time.sleep(delay_time)

@@ -5,14 +5,10 @@ body{
     display: flex;
     justify-content: space-evenly;
 }
-/* .icon-btn > li{
-    width: 60px;
-    height: 60px;
-    cursor: pointer;
-    font-size: 32px;
-    background-color: whitesmoke;
+.upbtn{
+    width: auto;
+    height: auto;
+    background-color: white;
     color: black;
+    border-radius: 30%;
 }
-.icon-btn:hover{
-    background-color: darkgray;
-} */
