@@ -21,5 +21,6 @@ urlpatterns = [
     path('', views.index),
     path('home.html', views.home),
     path('books.html', views.books),
-    path('favorite.html', views.favorite)
+    path('favorite.html', views.favorite),
+    path('search.html', views.search, name='search')
 ]

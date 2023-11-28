@@ -57,6 +57,7 @@ def search_comic(keys):
         element.send_keys(Keys.RETURN)
         confirm_xpath = '/html/body/div[1]/a[2]'
         chrome.find_element(By.XPATH, confirm_xpath).click()
+        scroll_window(chrome=chrome)
         soup = BeautifulSoup(chrome.page_source, 'lxml')
         comic_list = soup.find('ul', class_="book-list").find_all('li')
         for comic in comic_list:

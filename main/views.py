@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 import crawl.crawler as crawling
-from selenium.webdriver.common.by import By
 import time
 # Create your views here.
 url = 'https://www.manhuaren.com/search/'
@@ -31,6 +30,21 @@ def books(request):
 
 def favorite(request):
     return render(request, 'favorite.html')
+
+
+def search(request):
+    if request.method == 'GET':
+        key = request.GET.get('key')
+        datas = crawling.search_comic(keys=key)
+        result = []
+        for data in datas:
+            context = {}
+            context['title'] = data[0]
+            context['comic_url'] = data[1]
+            context['info'] = data[2]
+            context['img_url'] = data[-1]
+            result.append(context)
+    return render(request, 'search.html', {'comic_result': result})
 
 
 def scroll_window(chrome, start=0, end=10000, step=500, delay_time=0.5):
