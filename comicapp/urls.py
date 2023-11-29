@@ -22,5 +22,6 @@ urlpatterns = [
     path('home.html', views.home),
     path('books.html', views.books),
     path('favorite.html', views.favorite),
+    path('login.html', views.login),
     path('search.html', views.search, name='search')
 ]

@@ -47,6 +47,10 @@ def search(request):
     return render(request, 'search.html', {'comic_result': result})
 
 
+def login(request):
+    return render(request, 'login.html')
+
+
 def scroll_window(chrome, start=0, end=10000, step=500, delay_time=0.5):
     while start <= end:
         chrome.execute_script(f'window.scrollTo({start},{start+step})')
