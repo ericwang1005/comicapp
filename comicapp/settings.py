@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-*dk27f7fyb^9s-)&toqef-^)=-48%2qg*b%%kv4fmq@g%2mvbx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['comicapp-wccw.onrender.com']
 
 
 # Application definition
