@@ -130,7 +130,7 @@ class DuplicateOptionInfo(_system_info):
 
 class TestSystemInfoReading:
 
-    def setup(self):
+    def setup_method(self):
         """ Create the libraries """
         # Create 2 sources and 2 libraries
         self._dir1 = mkdtemp()
@@ -171,8 +171,7 @@ class TestSystemInfoReading:
         self.c_dup_options = site_and_parse(get_class('duplicate_options'),
                                             self._sitecfg)
 
-
-    def teardown(self):
+    def teardown_method(self):
         # Do each removal separately
         try:
             shutil.rmtree(self._dir1)
@@ -254,6 +253,10 @@ class TestSystemInfoReading:
         finally:
             os.chdir(previousDir)
 
+    HAS_MKL = "mkl_rt" in mkl_info().calc_libraries_info().get("libraries", [])
+
+    @pytest.mark.xfail(HAS_MKL, reason=("`[DEFAULT]` override doesn't work if "
+                                        "numpy is built with MKL support"))
     def test_overrides(self):
         previousDir = os.getcwd()
         cfg = os.path.join(self._dir1, 'site.cfg')
