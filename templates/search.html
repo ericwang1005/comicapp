@@ -43,9 +43,9 @@
           </nav>
     </div>
     <div class="card-container d-flex">
-      <div class="row">
+      <div class="row justify-content-md-evenly gap-3">
         {% for comic in comic_result %}
-        <div class="card border rounded-3 shadow-lg col-sm-12" style="width: 18rem;">
+        <div class="card border rounded-3 shadow-lg col-6 col-md-3" style="width: 18rem;">
             <img src={{comic.img_url}} class="card-img-top" alt={{comic.title}} >
             <div class="card-body">
               <h5 class="card-title">{{comic.title}}</h5>
