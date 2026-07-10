@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-from django.test import TestCase
+from django.test import Client, TestCase
 
 from main.models import Comic
 
@@ -47,3 +47,30 @@ class ComicModelTests(TestCase):
     def test_str_returns_title(self):
         comic = Comic(title='海賊王', comic_url='https://example.com/op')
         self.assertEqual(str(comic), '海賊王')
+
+
+class CsrfProxyRegressionTest(TestCase):
+    """回歸測試：Render 在邊緣終結 TLS 並以 HTTP 轉發，帶 https Origin 的 admin 登入 POST
+    不應被 Django 4.0+ 的 CSRF Origin 檢查誤判為 403。守護 settings 的
+    SECURE_PROXY_SSL_HEADER / CSRF_TRUSTED_ORIGINS；若被誤刪此測試會失敗。"""
+
+    def test_admin_login_post_with_https_origin_not_csrf_blocked(self):
+        host = 'comicapp-wccw.onrender.com'
+        client = Client(enforce_csrf_checks=True)
+        # GET 先取得 csrftoken（GET 不觸發 Origin 檢查）
+        get_resp = client.get('/admin/login/', SERVER_NAME=host,
+                              HTTP_X_FORWARDED_PROTO='https')
+        token = get_resp.cookies['csrftoken'].value
+        # 模擬 Render：wsgi scheme 是 http，但帶 X-Forwarded-Proto=https 與 https Origin
+        resp = client.post(
+            '/admin/login/',
+            {'username': 'x', 'password': 'y',
+             'csrfmiddlewaretoken': token, 'next': '/admin/'},
+            SERVER_NAME=host,
+            HTTP_ORIGIN='https://comicapp-wccw.onrender.com',
+            HTTP_X_FORWARDED_PROTO='https',
+        )
+        self.assertNotEqual(
+            resp.status_code, 403,
+            'admin 登入被 CSRF Origin 檢查誤判 403，請確認 settings 的 '
+            'SECURE_PROXY_SSL_HEADER 設定仍在')
