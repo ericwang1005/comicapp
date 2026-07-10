@@ -33,10 +33,10 @@ def favorite(request):
 
 
 def search(request):
+    result = []
     if request.method == 'GET':
         key = request.GET.get('key')
         datas = crawling.search_comic(keys=key)
-        result = []
         for data in datas:
             context = {}
             context['title'] = data[0]
