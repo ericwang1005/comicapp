@@ -82,8 +82,10 @@ def quick_pick_comic(url):
     chrome.find_element(By.XPATH, comic_xpath).click()
     scroll_window(chrome=chrome)
     soup = BeautifulSoup(chrome.page_source, 'lxml')
-    if soup != None:
-        content = soup.find('ul', class_="manga-list-2").findAll('li')
+    content = []
+    manga_list = soup.find('ul', class_="manga-list-2")
+    if manga_list is not None:
+        content = manga_list.findAll('li')
     try:
         for comic in content:
             title = comic.find('p').text.strip()

@@ -1,22 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 import crawl.crawler as crawling
+from main.models import Comic
 import time
 # Create your views here.
-url = 'https://www.manhuaren.com/search/'
 
 
 def index(request):
-    global url
-    datas = crawling.quick_pick_comic(url)
-    comics = []
-    for data in datas:
-        context = {}
-        context['title'] = data[0]
-        context['new_update'] = data[1]
-        context['comic_url'] = data[2]
-        context['img_url'] = data[-1]
-        comics.append(context)
+    comics = Comic.objects.all()
     return render(request, 'index.html', {'comics': comics})
 
 
@@ -33,10 +24,10 @@ def favorite(request):
 
 
 def search(request):
+    result = []
     if request.method == 'GET':
         key = request.GET.get('key')
         datas = crawling.search_comic(keys=key)
-        result = []
         for data in datas:
             context = {}
             context['title'] = data[0]

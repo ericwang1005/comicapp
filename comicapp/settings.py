@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,12 +21,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*dk27f7fyb^9s-)&toqef-^)=-48%2qg*b%%kv4fmq@g%2mvbx'
+# 正式環境用環境變數 SECRET_KEY 提供；本機開發用下方 fallback（此值已輪換，舊金鑰作廢）。
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    'django-insecure-d1wyd0u8)07h$cc0kf(5p^xe=f!5s@9rn^#v7^cpunwzwdj3z%')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# 預設 False（安全）。本機開發用 `DEBUG=True python manage.py runserver` 開啟。
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['comicapp-wccw.onrender.com', '127.0.0.1']
+
+# Render 在邊緣終結 TLS 後以 HTTP 轉發給 gunicorn，需信任 X-Forwarded-Proto，
+# 讓 request.is_secure() 正確回報 True；否則 Django 4.0+ 新增的 CSRF Origin 檢查
+# 會把 https 來源的表單提交（含 admin 登入）誤判為 403。
+CSRF_TRUSTED_ORIGINS = ['https://comicapp-wccw.onrender.com']
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # Application definition
@@ -111,8 +122,6 @@ LANGUAGE_CODE = 'zh-Hant'
 TIME_ZONE = 'Asia/Taipei'
 
 USE_I18N = True
-
-USE_L10N = True
 
 USE_TZ = True
 
